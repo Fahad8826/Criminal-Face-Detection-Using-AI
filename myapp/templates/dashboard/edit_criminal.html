@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3>Edit Criminal</h3>
+    <hr>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name"
+                   class="form-control"
+                   value="{{ criminal.name }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Age</label>
+            <input type="number" name="age"
+                   class="form-control"
+                   value="{{ criminal.age }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Crime Type</label>
+            <input type="text" name="crime_type"
+                   class="form-control"
+                   value="{{ criminal.crime_type }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Place</label>
+            <input type="text" name="place"
+                   class="form-control"
+                   value="{{ criminal.place }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Update
+        </button>
+
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card mt-4">
+    <div class="card-header {% if success %}bg-success{% else %}bg-danger{% endif %} text-white">
+        Dataset Rebuild Result
+    </div>
+    <div class="card-body">
+        <p>{{ message }}</p>
+        
+        {% if labels %}
+        <p><strong>Labels in dataset:</strong> {{ labels }}</p>
+        {% endif %}
+        
+        <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
+    </div>
+</div>
+
+{% endblock %}

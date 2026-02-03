@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+
+            <h4 class="text-danger mb-3">Delete Criminal</h4>
+
+            <p>
+                Are you sure you want to delete
+                <strong>{{ criminal.name }}</strong>?
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    Yes, Delete
+                </button>
+
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">
+                    Cancel
+                </a>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

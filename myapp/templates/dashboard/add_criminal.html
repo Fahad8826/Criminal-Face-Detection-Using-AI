@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Add Criminal</h3>
+<hr>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input class="form-control mb-2" name="name" placeholder="Name" required>
+    <input class="form-control mb-2" name="age" type="number" placeholder="Age" required>
+    <input class="form-control mb-2" name="crime_type" placeholder="Crime Type" required>
+    <input class="form-control mb-2" name="place" placeholder="Place" required>
+
+    <input class="form-control mb-3" type="file" name="photo" required>
+
+    <button class="btn btn-success">Save</button>
+</form>
+
+{% endblock %}

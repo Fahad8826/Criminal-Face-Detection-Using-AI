@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between mb-3">
+    <h2>Criminal Records</h2>
+    <a href="{% url 'add_criminal' %}" class="btn btn-success">➕ Add Criminal</a>
+</div>
+
+<div class="table-responsive">
+<table class="table table-bordered table-hover text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Crime Type</th>
+            <th>Place</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for criminal in criminals %}
+        <tr>
+            <td>{{ criminal.id }}</td>
+            <td>
+                <img src="{{ criminal.photo.url }}" width="70" height="70" class="rounded">
+            </td>
+            <td>{{ criminal.name }}</td>
+            <td>{{ criminal.age }}</td>
+            <td>{{ criminal.crime_type }}</td>
+            <td>{{ criminal.place }}</td>
+            <td>
+                <a href="{% url 'edit_criminal' criminal.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'delete_criminal' criminal.id %}"
+                   onclick="return confirm('Delete this record?')"
+                   class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}

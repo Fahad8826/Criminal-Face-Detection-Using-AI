@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Search Criminal</h3>
+<hr>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Upload Suspect Image</label>
+                <input class="form-control"
+                       type="file"
+                       name="photo"
+                       accept="image/*"
+                       onchange="previewImage(event)"
+                       required>
+            </div>
+
+            <!-- Image Preview -->
+            <div class="mb-3 text-center">
+                <img id="preview"
+                     src=""
+                     style="display:none; width:180px; height:180px;"
+                     class="rounded border">
+            </div>
+
+            <button type="submit" class="btn btn-warning">
+                🔍 Search Criminal
+            </button>
+        </form>
+
+    </div>
+</div>
+
+{% if criminal %}
+<!-- RESULT CARD -->
+<div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+        Criminal Identified
+    </div>
+
+    <div class="card-body row align-items-center">
+        <div class="col-md-4 text-center">
+            <img src="{{ criminal.photo.url }}"
+                 class="rounded"
+                 width="180"
+                 height="180">
+        </div>
+
+        <div class="col-md-8">
+            <p><strong>Name:</strong> {{ criminal.name }}</p>
+            <p><strong>Age:</strong> {{ criminal.age }}</p>
+            <p><strong>Crime Type:</strong> {{ criminal.crime_type }}</p>
+            <p><strong>Place:</strong> {{ criminal.place }}</p>
+            <p><strong>Confidence:</strong>
+                <span class="badge bg-primary">
+                    {{ confidence|floatformat:2 }}
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% elif searched %}
+<div class="alert alert-danger mt-3">
+    ❌ No matching criminal found.
+</div>
+{% endif %}
+
+<script>
+function previewImage(event) {
+    const img = document.getElementById("preview");
+    img.src = URL.createObjectURL(event.target.files[0]);
+    img.style.display = "block";
+}
+</script>
+
+{% endblock %}
