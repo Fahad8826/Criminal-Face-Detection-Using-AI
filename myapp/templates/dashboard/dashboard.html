@@ -1,46 +1,107 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="d-flex justify-content-between mb-3">
-    <h2>Criminal Records</h2>
-    <a href="{% url 'add_criminal' %}" class="btn btn-success">➕ Add Criminal</a>
+<!-- Breadcrumb -->
+<nav class="breadcrumb-custom">
+    <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> Home</a>
+    <span class="mx-2">&gt;</span>
+    <span class="active">Dashboard</span>
+</nav>
+
+<h2 style="margin-bottom: 25px; color: #333; font-weight: 600;">Dashboard</h2>
+
+<!-- Stats Cards -->
+<div class="stats-cards">
+    <!-- Police Station Card -->
+    <div class="stat-card">
+        <div class="label">Police Station</div>
+        <div class="sublabel">All Police Station</div>
+        <div class="value">1</div>
+        <div class="change">
+            <span>Change</span>
+            <span style="font-weight: 600;">76%</span>
+        </div>
+    </div>
+
+    <!-- Crime Card -->
+    <div class="stat-card crime">
+        <div class="label">Crime</div>
+        <div class="sublabel">All Crime</div>
+        <div class="value">0</div>
+        <div class="change">
+            <span>Change</span>
+            <span style="font-weight: 600;">88%</span>
+        </div>
+    </div>
+
+    <!-- People Card -->
+    <div class="stat-card people">
+        <div class="label">People</div>
+        <div class="sublabel">All People</div>
+        <div class="value">1</div>
+        <div class="change">
+            <span>Change</span>
+            <span style="font-weight: 600;">65%</span>
+        </div>
+    </div>
+
+    <!-- Complaints Card -->
+    <div class="stat-card complaints">
+        <div class="label">Complaints</div>
+        <div class="sublabel">All Complaints</div>
+        <div class="value">0</div>
+        <div class="change">
+            <span>Change</span>
+            <span style="font-weight: 600;">45%</span>
+        </div>
+    </div>
 </div>
 
-<div class="table-responsive">
-<table class="table table-bordered table-hover text-center align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Photo</th>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Crime Type</th>
-            <th>Place</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<!-- Criminal Records Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h4>Recent Criminal Records</h4>
+        <a href="{% url 'add_criminal' %}" class="btn-primary-custom">
+            <i class="fas fa-plus"></i> Add Criminal
+        </a>
+    </div>
 
-    <tbody>
-        {% for criminal in criminals %}
-        <tr>
-            <td>{{ criminal.id }}</td>
-            <td>
-                <img src="{{ criminal.photo.url }}" width="70" height="70" class="rounded">
-            </td>
-            <td>{{ criminal.name }}</td>
-            <td>{{ criminal.age }}</td>
-            <td>{{ criminal.crime_type }}</td>
-            <td>{{ criminal.place }}</td>
-            <td>
-                <a href="{% url 'edit_criminal' criminal.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'delete_criminal' criminal.id %}"
-                   onclick="return confirm('Delete this record?')"
-                   class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Address</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for criminal in criminals %}
+            <tr>
+                <td style="font-weight: 600;">{{ criminal.name }}</td>
+                <td>{{ criminal.age }}</td>
+                <td>{{ criminal.gender|default:"Male" }}</td>
+                <td>{{ criminal.address|default:criminal.place }}</td>
+                <td>{{ criminal.place }}</td>
+                <td>{{ criminal.created_at|date:"d-m-Y"|default:"25-02-2025" }}</td>
+                <td>{{ criminal.created_at|time:"H:i"|default:"10:22" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td style="font-weight: 600;">Raj</td>
+                <td>45</td>
+                <td>Male</td>
+                <td>Palakkad</td>
+                <td>Palakkad</td>
+                <td>25-02-2025</td>
+                <td>10:22</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

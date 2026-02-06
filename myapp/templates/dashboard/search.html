@@ -1,81 +1,173 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>Search Criminal</h3>
-<hr>
+<!-- Breadcrumb -->
+<nav class="breadcrumb-custom">
+    <a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> Home</a>
+    <span class="mx-2">&gt;</span>
+    <span class="active">Search Criminal</span>
+</nav>
 
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
+<h2 style="margin-bottom: 25px; color: #333; font-weight: 600;">
+    <i class="fas fa-search"></i> Face Recognition Search
+</h2>
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
+<!-- Upload Section -->
+<div class="form-container" style="max-width: 800px;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <i class="fas fa-camera" style="font-size: 24px; color: #5e35b1;"></i>
+        <h3 style="margin: 0;">Upload Suspect Photo</h3>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-            <div class="mb-3">
-                <label class="form-label">Upload Suspect Image</label>
-                <input class="form-control"
-                       type="file"
-                       name="photo"
-                       accept="image/*"
-                       onchange="previewImage(event)"
-                       required>
-            </div>
+        <div class="mb-3">
+            <label style="font-weight: 500; margin-bottom: 12px; color: #555; display: block;">
+                <i class="fas fa-image"></i> Select Image File
+            </label>
+            <input class="form-control form-control-custom"
+                   type="file"
+                   name="photo"
+                   accept="image/*"
+                   onchange="previewImage(event)"
+                   required>
+            <small style="color: #999; margin-top: 8px; display: block;">
+                Supported formats: JPG, PNG, JPEG (Max 5MB)
+            </small>
+        </div>
 
-            <!-- Image Preview -->
-            <div class="mb-3 text-center">
+        <!-- Image Preview -->
+        <div class="mb-4 text-center" id="preview-container" style="display:none;">
+            <div style="background: linear-gradient(135deg, #f5f5f5 0%, #e9ecef 100%); padding: 30px; border-radius: 12px; border: 2px dashed #cbd5e1;">
+                <p style="color: #666; font-weight: 500; margin-bottom: 15px;">
+                    <i class="fas fa-eye"></i> Image Preview
+                </p>
                 <img id="preview"
                      src=""
-                     style="display:none; width:180px; height:180px;"
-                     class="rounded border">
+                     style="width: 250px; height: 250px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 3px solid white;">
             </div>
+        </div>
 
-            <button type="submit" class="btn btn-warning">
-                🔍 Search Criminal
-            </button>
-        </form>
-
-    </div>
+        <button type="submit" class="btn-primary-custom" style="width: 100%; padding: 14px; font-size: 16px;">
+            <i class="fas fa-search"></i> Search Criminal Database
+        </button>
+    </form>
 </div>
 
 {% if criminal %}
-<!-- RESULT CARD -->
-<div class="card shadow-sm">
-    <div class="card-header bg-success text-white">
-        Criminal Identified
+<!-- RESULT CARD - Match Found -->
+<div style="background: white; border-radius: 12px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 30px; overflow: hidden; max-width: 800px;">
+    <div style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%); padding: 20px; color: white;">
+        <h4 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle" style="font-size: 24px;"></i>
+            <span>Criminal Identified - Match Found!</span>
+        </h4>
     </div>
 
-    <div class="card-body row align-items-center">
-        <div class="col-md-4 text-center">
-            <img src="{{ criminal.photo.url }}"
-                 class="rounded"
-                 width="180"
-                 height="180">
-        </div>
+    <div style="padding: 30px;">
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; align-items: start;">
+            <!-- Photo Section -->
+            <div style="text-align: center;">
+                <div style="position: relative; display: inline-block;">
+                    <img src="{{ criminal.photo.url }}"
+                         style="width: 200px; height: 200px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 3px solid #10b981;">
+                    <div style="position: absolute; top: -10px; right: -10px; background: #10b981; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; color: #10b981; font-weight: 600;">
+                    <i class="fas fa-shield-alt"></i> Verified Match
+                </p>
+            </div>
 
-        <div class="col-md-8">
-            <p><strong>Name:</strong> {{ criminal.name }}</p>
-            <p><strong>Age:</strong> {{ criminal.age }}</p>
-            <p><strong>Crime Type:</strong> {{ criminal.crime_type }}</p>
-            <p><strong>Place:</strong> {{ criminal.place }}</p>
-            <p><strong>Confidence:</strong>
-                <span class="badge bg-primary">
-                    {{ confidence|floatformat:2 }}
-                </span>
-            </p>
+            <!-- Details Section -->
+            <div>
+                <h5 style="color: #333; margin-bottom: 20px; font-weight: 600; font-size: 18px;">
+                    Criminal Information
+                </h5>
+                
+                <div style="display: grid; gap: 15px;">
+                    <div style="display: flex; padding: 12px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #5e35b1;">
+                        <strong style="color: #666; min-width: 120px;">
+                            <i class="fas fa-user"></i> Name:
+                        </strong>
+                        <span style="color: #333; font-weight: 500;">{{ criminal.name }}</span>
+                    </div>
+
+                    <div style="display: flex; padding: 12px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #5e35b1;">
+                        <strong style="color: #666; min-width: 120px;">
+                            <i class="fas fa-birthday-cake"></i> Age:
+                        </strong>
+                        <span style="color: #333; font-weight: 500;">{{ criminal.age }} years</span>
+                    </div>
+
+                    <div style="display: flex; padding: 12px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                        <strong style="color: #92400e; min-width: 120px;">
+                            <i class="fas fa-exclamation-triangle"></i> Crime Type:
+                        </strong>
+                        <span style="color: #92400e; font-weight: 600;">{{ criminal.crime_type }}</span>
+                    </div>
+
+                    <div style="display: flex; padding: 12px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #5e35b1;">
+                        <strong style="color: #666; min-width: 120px;">
+                            <i class="fas fa-map-marker-alt"></i> Location:
+                        </strong>
+                        <span style="color: #333; font-weight: 500;">{{ criminal.place }}</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <!-- <div style="margin-top: 25px; display: flex; gap: 10px;">
+                    <button class="btn-primary-custom" style="flex: 1;">
+                        <i class="fas fa-file-alt"></i> View Full Report
+                    </button>
+                    <button class="btn-action btn-edit" style="padding: 10px 20px;">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div> -->
+            </div>
         </div>
     </div>
 </div>
 
 {% elif searched %}
-<div class="alert alert-danger mt-3">
-    ❌ No matching criminal found.
+<!-- No Match Found -->
+<div style="background: white; border-radius: 12px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-top: 30px; overflow: hidden; max-width: 800px;">
+    <div style="background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); padding: 20px; color: white;">
+        <h4 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-times-circle" style="font-size: 24px;"></i>
+            <span>No Match Found</span>
+        </h4>
+    </div>
+
+    <div style="padding: 40px; text-align: center;">
+        <div style="background: #fee2e2; width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-user-slash" style="font-size: 40px; color: #ef4444;"></i>
+        </div>
+        <h5 style="color: #333; margin-bottom: 10px;">No Matching Criminal Record Found</h5>
+        <p style="color: #666; margin-bottom: 20px;">The uploaded image does not match any records in our criminal database.</p>
+        <button onclick="location.reload()" class="btn-primary-custom">
+            <i class="fas fa-redo"></i> Search Again
+        </button>
+    </div>
 </div>
 {% endif %}
 
 <script>
 function previewImage(event) {
     const img = document.getElementById("preview");
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
+    const container = document.getElementById("preview-container");
+    
+    if (event.target.files && event.target.files[0]) {
+        img.src = URL.createObjectURL(event.target.files[0]);
+        container.style.display = "block";
+        
+        // Smooth scroll to preview
+        setTimeout(() => {
+            container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+    }
 }
 </script>
 
